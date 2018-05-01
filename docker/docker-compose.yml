@@ -1,0 +1,85 @@
+version: '3'
+
+services:
+  db-0:
+    image: cockroachdb/cockroach:v2.0.0
+    hostname: db-0
+    container_name: db-0
+    command: start --insecure
+    ports:
+     - 8080:8080
+    networks:
+     - roachnet
+    volumes:
+     - ./data/db-0:/cockroach/cockroach-data
+
+  db-1:
+    image: cockroachdb/cockroach:v2.0.0
+    hostname: db-1
+    container_name: db-1
+    command: start --insecure --join=db-0
+    depends_on:
+      - db-0
+    ports:
+     - 8081:8080
+    networks:
+     - roachnet
+    volumes:
+     - ./data/db-1:/cockroach/cockroach-data
+
+  db-2:
+   image: cockroachdb/cockroach:v2.0.0
+   hostname: db-2
+   container_name: db-2
+   command: start --insecure --join=db-0,db-1
+   depends_on:
+     - db-1
+   ports:
+    - 8082:8080
+   networks:
+    - roachnet
+   volumes:
+     - ./data/db-2:/cockroach/cockroach-data
+
+  db-3:
+   image: cockroachdb/cockroach:v2.0.0
+   hostname: db-3
+   container_name: db-3
+   command: start --insecure --join=db-0,db-1,db-2
+   depends_on:
+     - db-2
+   ports:
+    - 8083:8080
+   networks:
+    - roachnet
+   volumes:
+     - ./data/db-3:/cockroach/cockroach-data
+
+  db-4:
+   image: cockroachdb/cockroach:v2.0.0
+   hostname: db-4
+   container_name: db-4
+   command: start --insecure --join=db-0,db-1,db-2,db-3
+   depends_on:
+     - db-3
+   ports:
+    - 8084:8080
+   networks:
+    - roachnet
+   volumes:
+     - ./data/db-4:/cockroach/cockroach-data
+
+  haproxy:
+    build:
+      context: ./haproxy/
+    image: haproxy:1.8.7
+    hostname: haproxy
+    container_name: haproxy
+    ports:
+      - 5432:5432
+    networks:
+      - roachnet
+
+networks:
+  roachnet:
+    driver: bridge
