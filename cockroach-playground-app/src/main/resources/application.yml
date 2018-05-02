@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: cockroach-playground
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    show-sql: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/playground
+    username: root
+    password:
+
+server:
+  port: 8080

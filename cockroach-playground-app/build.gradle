@@ -41,8 +41,19 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.flywaydb:flyway-core')
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	compile('com.zaxxer:HikariCP:3.0.0') {
+		exclude group: 'org.hibernate', module: 'hibernate-core'
+	}
+	
+  // Need this in order to get the HikariCPConnectionProvider
+	compile('org.hibernate:hibernate-hikaricp:5.2.17.Final') {
+		exclude group: 'com.zaxxer', module: 'HikariCP'
+		exclude group: 'org.hibernate', module: 'hibernate-core'
+	}
+
 	runtime('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
-	compileTestJava("com.h2database:h2")
+	testCompile("com.h2database:h2")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
