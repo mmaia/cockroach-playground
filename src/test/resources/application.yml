@@ -7,10 +7,9 @@ spring:
     database: postgresql
     show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/playground
+    url: jdbc:postgresql://localhost:26257/playground
     username: root
     password:
     driver-class-name: org.postgresql.Driver
-
 server:
   port: 8080

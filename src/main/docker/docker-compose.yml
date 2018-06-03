@@ -1,69 +1,71 @@
 version: '3'
 
+# WIP: WARNING THIS IS NOT WORKING YET, ISSUES TO CONNECT FROM THE APPLICATION USING FLYWAY  connecting via haproxy.
+
 services:
   db-0:
-    image: cockroachdb/cockroach:v2.0.0
+    image: cockroachdb/cockroach:v2.0.2
     hostname: db-0
     container_name: db-0
     command: start --insecure
     ports:
-     - 8080:8080
+      - 7000:8080
     networks:
-     - roachnet
+      - roachnet
     volumes:
-     - ./data/db-0:/cockroach/cockroach-data
+      - ./data/db-0:/cockroach/cockroach-data
 
   db-1:
-    image: cockroachdb/cockroach:v2.0.0
+    image: cockroachdb/cockroach:v2.0.2
     hostname: db-1
     container_name: db-1
     command: start --insecure --join=db-0
     depends_on:
-      - db-0
+       - db-0
     ports:
-     - 8081:8080
+      - 7001:8080
     networks:
-     - roachnet
+      - roachnet
     volumes:
-     - ./data/db-1:/cockroach/cockroach-data
+      - ./data/db-1:/cockroach/cockroach-data
 
   db-2:
-   image: cockroachdb/cockroach:v2.0.0
-   hostname: db-2
-   container_name: db-2
-   command: start --insecure --join=db-0,db-1
-   depends_on:
-     - db-1
-   ports:
-    - 8082:8080
-   networks:
-    - roachnet
-   volumes:
-     - ./data/db-2:/cockroach/cockroach-data
+    image: cockroachdb/cockroach:v2.0.2
+    hostname: db-2
+    container_name: db-2
+    command: start --insecure --join=db-0,db-1
+    depends_on:
+      - db-1
+    ports:
+      - 7002:8080
+    networks:
+      - roachnet
+    volumes:
+      - ./data/db-2:/cockroach/cockroach-data
 
   db-3:
-   image: cockroachdb/cockroach:v2.0.0
+   image: cockroachdb/cockroach:v2.0.2
    hostname: db-3
    container_name: db-3
    command: start --insecure --join=db-0,db-1,db-2
    depends_on:
      - db-2
    ports:
-    - 8083:8080
+    - 7003:8080
    networks:
     - roachnet
    volumes:
      - ./data/db-3:/cockroach/cockroach-data
 
   db-4:
-   image: cockroachdb/cockroach:v2.0.0
+   image: cockroachdb/cockroach:v2.0.2
    hostname: db-4
    container_name: db-4
    command: start --insecure --join=db-0,db-1,db-2,db-3
    depends_on:
      - db-3
    ports:
-    - 8084:8080
+    - 7004:8080
    networks:
     - roachnet
    volumes:
@@ -77,6 +79,7 @@ services:
     container_name: haproxy
     ports:
       - 5432:5432
+      - 9000:9000
     networks:
       - roachnet
 
