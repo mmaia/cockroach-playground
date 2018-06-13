@@ -1,15 +1,15 @@
 version: '3'
 # ==== development cockroach
-
 # for a cluster configuration with haproxy check /src/main/docker folder
 
 services:
   db-0:
-    image: cockroachdb/cockroach:v2.0.2
+    build:
+      context: .
+    image: cockroachplayground:2.0.2
     hostname: db-0
     container_name: db-0
     command: start --insecure
-    command: sql --insecure --execute="create database playground;"
     ports:
       - 26257:26257
       - 7000:8080
